@@ -8,98 +8,99 @@
 import UIKit
 
 class NewsListVC: UITableViewController {
+    
+    private let CELL_INDENTIFIER = "ArticleTableViewCell"
+    private let INFO_DICT_API_KEY = "News API Key"
+    private let INFO_DICT_URL_KEY = "Top News URL"
+    
+    private var loadingIndicator: UIBarButtonItem!
+    private var loadingTimer: Timer!
+    private var country: String  = "in"
+    private var topNewsUrl: String {
+        guard let endPoint = Bundle.main.object(forInfoDictionaryKey: INFO_DICT_URL_KEY) as? String else { return "" }
+        guard let apiKey = Bundle.main.object(forInfoDictionaryKey: INFO_DICT_API_KEY) as? String else { return "" }
+        let requestUrl = "\(endPoint)?country=\(country)&apiKey=\(apiKey)"
+        return requestUrl
+    }
+    
+    private var articleListVM: ArticleListVM!
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         setup()
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     
     private func setup() {
         title = "News App"
         navigationController?.navigationBar.prefersLargeTitles = true
-        
-        if let url = URL(string: "https://newsapi.org/v2/top-headlines?country=in&apiKey=283ccebe138f4a92a87940181707a66d") {
-            WebService().getArticles(from: url) { articles in
+        loadDataFromAPI()
+    }
+    
+    func loadDataFromAPI() {
+        if let url = URL(string: topNewsUrl) {
+            showLoadingText(true)
+            WebService().getArticles(from: url) { [weak self] articles in
                 if let articles = articles {
-                    for article in articles {
-                        print(article)
+                    self?.articleListVM = ArticleListVM(articles: articles)
+                    
+                    DispatchQueue.main.async {
+                        self?.showLoadingText(false)
+                        self?.tableView.reloadData()
                     }
                 }
             }
         }
     }
-
-    // MARK: - Table view data source
+    
+    func showLoadingText(_ show: Bool) {
+        if show {
+            loadingIndicator = UIBarButtonItem(title: "Loading", style: .done, target: nil, action: nil)
+            loadingIndicator.tintColor = .white
+            loadingTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(loadingAnimation), userInfo: nil, repeats: true)
+            navigationItem.leftBarButtonItem = loadingIndicator
+        } else {
+            navigationItem.leftBarButtonItem = nil
+            loadingTimer.invalidate()
+            loadingTimer = nil
+        }
+    }
+    
+    @objc func loadingAnimation() {
+        switch loadingIndicator.title {
+            case "Loading":
+                loadingIndicator.title = "Loading."
+            case "Loading.":
+                loadingIndicator.title = "Loading.."
+            case "Loading..":
+                loadingIndicator.title = "Loading..."
+            default:
+                loadingIndicator.title = "Loading"
+        }
+    }
+    
+    
+    // MARK: Table View Data Source methods
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        articleListVM == nil ? 0 : articleListVM.numberInSections
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        articleListVM == nil ? 0 : articleListVM.numberOfRowsInSection(section)
     }
-
-    /*
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CELL_INDENTIFIER, for: indexPath) as? ArticleTableViewCell else {
+            fatalError("Could not dequeue a ArticleTableViewCell")
+        }
+        
+        let articleVM = articleListVM.articleAtIndex(indexPath.row)
+        cell.titleLabel.text = articleVM.title
+        cell.descriptionLabel.text = articleVM.description
+        
         return cell
     }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
