@@ -7,10 +7,6 @@
 
 import Foundation
 
-struct Article {
-    // stub
-}
-
 class WebService {
     
     func getArticles(from url: URL, completion: @escaping ([Article]?) -> ()) {
@@ -19,7 +15,9 @@ class WebService {
                 print(error.localizedDescription)
                 completion(nil)
             } else if let data = data {
-                print(data)
+                if let decoded = try? JSONDecoder().decode(ArticleList.self, from: data) {
+                    completion(decoded.articles)
+                }
             }
         }.resume()
     }

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		852B48B126E49EA90069970B /* WebService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 852B48B026E49EA90069970B /* WebService.swift */; };
+		852B48B526E4A1480069970B /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 852B48B426E4A1480069970B /* Article.swift */; };
 		85D7848226E32FB2008469AE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D7848126E32FB2008469AE /* AppDelegate.swift */; };
 		85D7848426E32FB2008469AE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D7848326E32FB2008469AE /* SceneDelegate.swift */; };
 		85D7848926E32FB2008469AE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 85D7848726E32FB2008469AE /* Main.storyboard */; };
@@ -18,6 +19,7 @@
 
 /* Begin PBXFileReference section */
 		852B48B026E49EA90069970B /* WebService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebService.swift; sourceTree = "<group>"; };
+		852B48B426E4A1480069970B /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
 		85D7847E26E32FB2008469AE /* NewsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		85D7848126E32FB2008469AE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		85D7848326E32FB2008469AE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -47,6 +49,14 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
+		852B48B326E4A1330069970B /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				852B48B426E4A1480069970B /* Article.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		85D7847526E32FB2008469AE = {
 			isa = PBXGroup;
 			children = (
@@ -66,6 +76,7 @@
 		85D7848026E32FB2008469AE /* NewsApp */ = {
 			isa = PBXGroup;
 			children = (
+				852B48B326E4A1330069970B /* Models */,
 				852B48AF26E49E940069970B /* Services */,
 				85D7849526E334BC008469AE /* Controllers */,
 				85D7848126E32FB2008469AE /* AppDelegate.swift */,
@@ -160,6 +171,7 @@
 				85D7848426E32FB2008469AE /* SceneDelegate.swift in Sources */,
 				852B48B126E49EA90069970B /* WebService.swift in Sources */,
 				85D7849726E334E9008469AE /* NewsListVC.swift in Sources */,
+				852B48B526E4A1480069970B /* Article.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
